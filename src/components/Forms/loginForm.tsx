@@ -1,8 +1,6 @@
 import * as zod from 'zod'
-import { Controller, useForm } from 'react-hook-form'
+import {  useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { Button } from '../../styles/globals'
 
 
 const loginFormSchema = zod.object({
@@ -13,8 +11,6 @@ const loginFormSchema = zod.object({
 type LoginFormInputs = zod.infer<typeof loginFormSchema>
 
 export default function LoginForm(){
-
- 
 
   const {
     control,
@@ -36,7 +32,7 @@ export default function LoginForm(){
     <form onSubmit={handleSubmit(handleLogin)}>
       <input type="text" placeholder='Usuario' {...register('usuario')} required />
       <input type="text" placeholder='Senha' {...register('senha')} required />
-      <Button type='submit'>Login</Button>
+      <button type='submit'>Login</button>
     </form>
   )
 }

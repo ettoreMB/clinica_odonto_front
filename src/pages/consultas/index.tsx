@@ -1,20 +1,18 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { useRouter } from "next/router"
-import {  useEffect, useState } from "react"
+import {  useEffect } from "react"
 import { useContextSelector } from 'use-context-selector'
 import PacienteForm from '../../components/Forms/pacienteForm'
 import Modal from '../../components/modal'
 import Table from "../../components/table"
 import { TableButton } from '../../components/table/styles'
-import { PacienteContext } from '../../contexts/PacientesContext'
+import { ConsultaContext } from '../../contexts/ConsultaContextx'
 import { convertDate } from '../../utils/convertDate'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { isAxiosError } from 'axios'
 
-export default function ListPacientes() {
 
-  const {pacientes, isLoading, deletePaciente} = useContextSelector(PacienteContext, (context) => {
+export default function ListConsultas() {
+
+  const {consultas, isLoading, error, deleteConsulta} = useContextSelector(ConsultaContext, (context) => {
     return context
   })
 
@@ -24,21 +22,18 @@ export default function ListPacientes() {
     router.push(`/pacientes/${rg}`)
   }
   
-  async function handleDelete(rg: string) {
-    try {
-      await deletePaciente(rg)
-      toast.success("paciente deletado com sucesso")
-    } catch (err) {
-      isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao excluir o paciente")
-    }
-  }
-
   useEffect(() => {
-    pacientes
-  }, [pacientes])
+    consultas
+  }, [consultas])
 
   if (isLoading) {
     return (<h1>Carregando</h1>)
+  }
+
+  if (error.isError) {
+    return (
+      <h1>{error.message}</h1>
+    )
   }
 
   return (
@@ -55,27 +50,27 @@ export default function ListPacientes() {
       <Table>
         <thead>
           <tr>
-            <th>Nome</th>
-            <th>Sobrenome</th>
-            <th>DataCadastro</th>
+            <th>Dia Consulta</th>
+            <th>Paciente</th>
+            <th>Dentista</th>
             <th>Ação</th>
           </tr>
         </thead>
         <tbody>
 
-          {pacientes?.map(d => (
-            <tr key={d.rg}>
-              <td>{d.nome}</td>
-              <td>{d.sobrenome}</td>
-              <td>{convertDate(d.dataCadastro)}</td>
+          {consultas?.map(consulta => (
+            <tr key={consulta.dhConsulta}>
+              <td>{convertDate(consulta.dhConsulta)}</td>
+              <td>{consulta.paciente.nome}</td>
+              <td>{consulta.dentista.nome}</td>
               <td>
                 <TableButton
                   color="view"
-                  onClick={() => handlePacientes(d.rg)}
+                  onClick={() => handlePacientes(consulta.dhConsulta)}
                 >
                   Ver
                 </TableButton>
-                <TableButton color="delete" onClick={async() => handleDelete(d.rg)}>
+                <TableButton color="delete" >
                   Deletar
                 </TableButton>
               </td>
@@ -83,7 +78,6 @@ export default function ListPacientes() {
           ))}
         </tbody>
       </Table>
-      <ToastContainer pauseOnHover={false} autoClose={800} position="bottom-right" />
     </>
   )
 }

@@ -36,10 +36,16 @@ export const TableButton = styled('button', {
     variants: {
       color: {
         delete: {
-          backgroundColor: '$red'
+          backgroundColor: '$red300',
+          '&:hover': {
+            backgroundColor: '$red500'
+          }
         },
         view: {
-          backgroundColor: '$yellow'
+          backgroundColor: '$yellow300',
+          '&:hover': {
+            backgroundColor: '$yellow500',
+          }
         }
       }
     },
@@ -50,7 +56,7 @@ export const TableButton = styled('button', {
     borderRadius: '6px',
     backgroundColor: '$gray300',
     '&:hover': {
-      backgroundColor: '$gray500',
+      cursor: 'pointer'
     }
   
 })

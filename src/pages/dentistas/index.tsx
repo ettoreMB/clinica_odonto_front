@@ -1,94 +1,93 @@
 
-import { Router, useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+
 import Table from "../../components/table"
-import * as Dialog from '@radix-ui/react-dialog'
-import { api } from "../../lib/axios"
 import Modal from "../../components/modal"
 import DentistaForm from "../../components/Forms/dentistaForm"
-import { Button } from "../../styles/globals"
 import { TableButton } from "../../components/table/styles"
+import { DentistaContext } from "../../contexts/DentistaContextx"
+import { useContextSelector } from "use-context-selector"
 
-export interface DentistaProps {
-  nome: string,
-  matricula: string
-}
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-interface reqProps {
-  matricula: string | string[] | undefined
-}
+import * as Dialog from '@radix-ui/react-dialog'
+import { isAxiosError } from "axios"
 
 export default function ListDentista() {
 
-  const [dentistas, setDentistas] = useState<DentistaProps[]>([])
+  const { isLoading, dentistas, deleteDentista } = useContextSelector(DentistaContext, (context) => {
+    return context
+  })
+
+
   const router = useRouter()
 
-  function handleDentista(matricula: string){
-    router.push(`/dentistas/${matricula}`)
+  function handleDentista(matricula: string | string[]) {
+    router.push(`dentistas/${matricula}`)
+  }
+  
+  async function handleDelete(matricula: any) {
+    try {
+      await deleteDentista(matricula)
+      toast.success("Dentista deletado com sucesso")
+    } catch (err) {
+      isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao excluir o dentista")
+    }
   }
 
-  async function handleDeleteDentista(matricula: string) {
-    await api.delete(`dentistas/${matricula}`)
-    const data = await getDentistas()
-    setDentistas((prev)=> [prev,...data])
+  useEffect(() => { dentistas }, [dentistas])
+
+  if (isLoading) {
+    return <h1>Loading</h1>
   }
+  return (
+    <>
+      <Dialog.Root>
+        <Dialog.Trigger asChild>
+          <button>+ Dentista</button>
+        </Dialog.Trigger>
+        <Modal title='Cadastrar Novo Paciente'>
+          <DentistaForm />
+        </Modal>
+      </Dialog.Root>
+      <Table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Matricula</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dentistas?.map(dentista => (
+            <tr key={String(dentista.matricula)}>
+              <td>{dentista.nomeSobrenome}</td>
+              <td>{dentista.matricula}</td>
 
-  async function getDentistas() {
-    const response =  await api.get("dentistas")
-    return response.data
-   }
+              <td>
+                <TableButton
+                  color="view"
+                  onClick={() => handleDentista(dentista.matricula)}
+                >
+                  Ver
+                </TableButton>
 
-  useEffect(() => {
-    async function run() {
-     const dentistas =  await getDentistas()
-     setDentistas(dentistas)
-     }
-    run()
-  },[dentistas])
+                <TableButton
+                  color="delete"
+                  onClick={() => handleDelete(dentista.matricula)}
+                >
+                  Deletar
+                </TableButton>
 
-    return ( 
-        <>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <Button>+ Dentista</Button>
-          </Dialog.Trigger>
-          <Modal title='Cadastrar Novo Paciente'>
-            <DentistaForm />
-          </Modal>
-        </Dialog.Root>
-          <Table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Matricula</th>
-                <th>Ação</th>
-              </tr>
-            </thead>
-            <tbody>
-            {dentistas?.map(d => (
-              <tr key={d.matricula}>
-                <td>{d.nome}</td>
-                <td>{d.matricula}</td>
-                <td>
-                    <TableButton
-                      color="view"
-                      onClick={()=> handleDentista(d.matricula)}
-                    >
-                      Ver
-                    </TableButton>
-                    <TableButton 
-                    color="delete"
-                    onClick={()=> handleDeleteDentista(d.matricula)}
-                    >
-                      Deletar
-                  </TableButton>
-                </td>
-              </tr>
-            ))}
-            </tbody>
-          </Table>
-        </>
-    )
- 
-
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <ToastContainer pauseOnHover={false} autoClose={800} position="bottom-right" />
+    </>
+  )
 }
+

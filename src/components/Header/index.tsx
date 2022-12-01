@@ -11,11 +11,14 @@ export function Header() {
   return(
     <Container>
       <LinkNav>
-      <Link href={"/dentistas"}>
+      <Link href={"/dentistas"} replace >
           Dentistas
       </Link>
       <Link href={"/pacientes"}>
           Pacientes
+      </Link>
+      <Link href={"/consultas"}>
+          Consultas
       </Link>
       </LinkNav>
       
@@ -38,8 +41,8 @@ const Login = () => {
           Login
         </LoginButton>
       </Dialog.Trigger>
-      <Modal title='Cadastrar Novo Paciente'>
-        <LoginForm />
+      <Modal title='Login'>
+       <LoginForm />
       </Modal>
     </Dialog.Root>
   )

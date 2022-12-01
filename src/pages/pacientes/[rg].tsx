@@ -1,14 +1,19 @@
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { api } from "../../lib/axios"
-
+import { useEffect } from "react"
+import { useContextSelector } from "use-context-selector"
+import { PacienteContext } from "../../contexts/PacientesContext"
+import * as Dialog from '@radix-ui/react-dialog'
+import Modal from "../../components/modal"
+import PacienteForm from "../../components/Forms/pacienteForm"
+import { HStack, VStack } from "../../styles/globals"
+import { Box } from "./styles"
 
 type PacienteProps = {
   nome: string,
   sobrenome: string,
   rg: string,
   dataCadatro: string
-  endereco : {
+  endereco: {
     cep: string
     logradouro: string
     numero: string
@@ -19,45 +24,63 @@ type PacienteProps = {
 }
 
 export default function Paciente() {
-  const router =  useRouter()
+  const router = useRouter()
   const { rg } = router.query
-  const [paciente, setPaciente] = useState<PacienteProps>()
-  
+
+
+  const { fetchPaciente, paciente, isLoading } = useContextSelector(PacienteContext, (context) => {
+    return context
+  })
 
   useEffect(() => {
-    if(!router.isReady) return
-    const  getPaciente= async(rg: string | string[] | undefined)=> {
-      const response =  await api.get(`pacientes/${rg}`)
-      setPaciente(response.data)
-     }
-     console.log(paciente)
-     getPaciente(rg)
-  },[router.isReady])
+    if (!router.isReady) return
+    fetchPaciente(String(rg))
+  }, [router.isReady])
 
-
+  if (isLoading) {
+    return <h1>Carregando</h1>
+  }
   return (
     <div>
-      {rg == null  ? 
-      (<h1>Loading</h1>) : 
-      (
-        <>
-          <h1>{paciente?.nome}</h1>
-          <h1>{paciente?.sobrenome}</h1>
-          <h1>{paciente?.rg}</h1>
-          {!paciente?.endereco ? 
-            "Endereco Não cadastrado": 
-            (
+     <Box>
+        <Box>
+          <strong>Nome: <span>{paciente?.nome}</span></strong>
+          <strong>Sobrenome: <span>{paciente?.sobrenome}</span> </strong>
+          <strong>RG: <span>{paciente?.rg}</span> </strong>
+        </Box>
+
+        <h3>Endereço:</h3>
+        {!paciente?.endereco ?
+          "Endereco Não cadastrado" :
+          (
             <>
-              <h1>{paciente?.endereco.logradouro}</h1>
-              <h1>{paciente?.endereco.bairro}</h1>
-              <h1>{paciente?.endereco.numero}</h1>
+              <Box>
+                <VStack>
+                  <strong>Rua: <span>{paciente?.endereco.logradouro}</span></strong>
+                  <strong>Numero: {paciente?.endereco.numero}</strong>
+                  <strong>Bairro: {paciente?.endereco.bairro}</strong>
+                  <strong>CEP: {paciente?.endereco.cep}</strong>
+                </VStack>
+              </Box>
+
+              <Box>
+                <VStack>
+                  <strong>Estado: <span>{paciente?.endereco.localidade}</span></strong>
+                  <strong>UF: {paciente?.endereco.uf}</strong>
+                </VStack>
+              </Box>
             </>
-            )
-          }
-        </>
-      )
-      }
-      
+          )
+        }
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <button>Editar Paciente</button>
+          </Dialog.Trigger>
+          <Modal title='Editar Paciente'>
+            <PacienteForm data={paciente} />
+          </Modal>
+        </Dialog.Root>
+        </Box>
     </div>
   )
 }

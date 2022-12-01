@@ -12,6 +12,7 @@ export const Overlay = styled(Dialog.Overlay,{
 
 export const Content = styled(Dialog.Content, {
   minWidth: '32rem',
+  width: 'fit-content',
   borderRadius: '8px',
   padding: '2rem 3rem',
   position: 'fixed',
@@ -24,7 +25,6 @@ export const Content = styled(Dialog.Content, {
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem',
-    
   }
 
 })
@@ -37,5 +37,9 @@ export const CloseButton = styled(Dialog.Close, {
   right: '1.5rem',
   lineHeight: '0',
   cursor: 'pointer',
-  color: 'black'
+  color: 'black',
+
+  '&:hover': {
+    background: 'transparent',
+  }
 })
