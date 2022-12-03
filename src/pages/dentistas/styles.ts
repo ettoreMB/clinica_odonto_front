@@ -1,14 +1,13 @@
 import { styled } from "../../styles";
 import { HStack } from "../../styles/globals";
 
-export const Container = styled(HStack, {
+export const Container = styled('div', {
   width: 'fit-content',
   gap: '1rem'
 })
 export const Box = styled("div", {
   display: 'inline-flex',
   alignItems: 'flex-end',
-  fontSize: '2rem',
-  gap:'1.5rem'
+  gap:'1rem'
 })
 

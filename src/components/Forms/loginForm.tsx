@@ -1,6 +1,7 @@
 import * as zod from 'zod'
 import {  useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
 
 
 const loginFormSchema = zod.object({
@@ -33,6 +34,9 @@ export default function LoginForm(){
       <input type="text" placeholder='Usuario' {...register('usuario')} required />
       <input type="text" placeholder='Senha' {...register('senha')} required />
       <button type='submit'>Login</button>
+      <Link href={"/user/create"}>
+        Criar novo usuário
+      </Link>
     </form>
   )
 }

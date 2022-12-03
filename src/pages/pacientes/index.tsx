@@ -11,10 +11,11 @@ import { convertDate } from '../../utils/convertDate'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isAxiosError } from 'axios'
+import { Half1Icon } from '@radix-ui/react-icons'
 
 export default function ListPacientes() {
 
-  const {pacientes, isLoading, deletePaciente} = useContextSelector(PacienteContext, (context) => {
+  const {pacientes, isLoading,error, deletePaciente} = useContextSelector(PacienteContext, (context) => {
     return context
   })
 
@@ -41,6 +42,10 @@ export default function ListPacientes() {
     return (<h1>Carregando</h1>)
   }
 
+  if(error) {
+    return <h1>Erro ao carregar a pagina</h1>
+  }
+
   return (
     <>
       <Dialog.Root>
@@ -56,7 +61,6 @@ export default function ListPacientes() {
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Sobrenome</th>
             <th>DataCadastro</th>
             <th>Ação</th>
           </tr>
@@ -65,8 +69,7 @@ export default function ListPacientes() {
 
           {pacientes?.map(d => (
             <tr key={d.rg}>
-              <td>{d.nome}</td>
-              <td>{d.sobrenome}</td>
+              <td>{d.nome} {d.sobrenome}</td>
               <td>{convertDate(d.dataCadastro)}</td>
               <td>
                 <TableButton

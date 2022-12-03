@@ -17,7 +17,7 @@ import { isAxiosError } from "axios"
 
 export default function ListDentista() {
 
-  const { isLoading, dentistas, deleteDentista } = useContextSelector(DentistaContext, (context) => {
+  const { isLoading, dentistas, error, deleteDentista } = useContextSelector(DentistaContext, (context) => {
     return context
   })
 
@@ -34,6 +34,7 @@ export default function ListDentista() {
       toast.success("Dentista deletado com sucesso")
     } catch (err) {
       isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao excluir o dentista")
+
     }
   }
 
@@ -41,6 +42,10 @@ export default function ListDentista() {
 
   if (isLoading) {
     return <h1>Loading</h1>
+  }
+
+  if(error) {
+    return <h1>Erro ao carregar a pagina</h1>
   }
   return (
     <>

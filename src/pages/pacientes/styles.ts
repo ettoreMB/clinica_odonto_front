@@ -6,5 +6,8 @@ export const Box = styled("div", {
   flexDirection:'column',
   fontSize: '1.5rem',
   gap:'1rem',
-  marginBottom: '1rem'
+  marginBottom: '1rem',
+  h3: {
+    fontSize: '1.5rem'
+  }
 })

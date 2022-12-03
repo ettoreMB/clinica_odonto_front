@@ -19,7 +19,7 @@ export const globalStyles = globalCss({
     fontWeight: 400
   },
 
-  input: {
+  'input[type=text], input[type=datetime-local]' : {
     border: 0,
     fontWeight: 'bold',
     borderRadius: '8px',
@@ -35,6 +35,18 @@ export const globalStyles = globalCss({
       backgroundColor: '$gray300',
       color: '$gray500'
     }
+  },
+
+  select: {
+    border: 0,
+    fontWeight: 'bold',
+    borderRadius: '8px',
+    backgroundColor: '$gray50',
+    padding: '1rem',
+    width: '100%',
+     option: {
+      backgroundColor: '$gray50',
+     }
   },
 
   button: {
@@ -69,15 +81,15 @@ export const Wrapper = styled('main', {
 
 export const HStack = styled('div', {
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'row',
+  gap: '1rem',
 })
 
 export const VStack = styled('div', {
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'column',
   justifyContent: 'space-around',
   gap: '1rem',
-
 })
 
 

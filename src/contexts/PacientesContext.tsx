@@ -2,6 +2,7 @@ import { AxiosError, isAxiosError } from "axios"
 import {  ReactNode, useCallback, useEffect, useState } from "react"
 import { createContext } from "use-context-selector"
 import { api } from "../lib/axios"
+import Paciente from "../pages/pacientes/[rg]"
 
 
 export interface Endereco {
@@ -17,8 +18,8 @@ export interface Paciente {
   nome: string
   sobrenome: string
   rg: string
-  dataCadastro: string,
   endereco: Endereco
+  dataCadastro: string
 }
 
 interface PacienteProviderProps {
@@ -36,9 +37,10 @@ interface PacienteContextType {
   pacientes: Paciente[]
   paciente: Paciente
   isLoading: boolean
+  error: boolean
   fetchPacientes:() =>Promise<void>
   fetchPaciente:(rg: string | string []) =>Promise<void>
-  createPaciente:(data: CreatePacienteInput) => Promise<void>
+  createPaciente:(data: Paciente) => Promise<void>
   updatePaciente:(data: CreatePacienteInput) => Promise<void>
   deletePaciente:(rg: string | string []) => Promise<void>
 }
@@ -47,6 +49,7 @@ export const PacienteContext = createContext({} as PacienteContextType)
 
 export function PacienteProvider({children}: PacienteProviderProps) {
   const [pacientes, setPacientes] = useState<Paciente[]>([])
+
   const [paciente, setPaciente] = useState<Paciente>({
     nome: "",
     sobrenome: "",
@@ -61,32 +64,40 @@ export function PacienteProvider({children}: PacienteProviderProps) {
       uf: ""
     }
   })
+  
   const [isLoading, setIsLoanding] = useState(true)
+
+  const [error, setError] = useState(false)
 
   const fetchPacientes = useCallback(async () => {
     try {
       const response =  await api.get("pacientes")
-      console.log(response.data)
       setPacientes(response.data)
+    } catch(err) {
+      setError(true)
     }finally {
       setIsLoanding(false)
     }
     
   },[])
+
   const fetchPaciente = useCallback(async (rg: string  | string[]) => {
     try {
       const response =  await api.get(`pacientes/${rg}`)
       setPaciente(response.data)
-    } finally {
+    } catch(err) {
+      setError(true)
+    }finally {
       setIsLoanding(false)
     }
     
   },[])
+
   const createPaciente = useCallback(async (data: CreatePacienteInput) => {
     const paciente = {
       nome: data.nome, 
       sobrenome: data.sobrenome, 
-      rg: data.rg, 
+      rg: data.rg,
       endereco :{
         bairro: data.endereco.bairro,
         cep: data.endereco.cep,
@@ -99,6 +110,7 @@ export function PacienteProvider({children}: PacienteProviderProps) {
     const response = await api.post('pacientes', paciente)
     setPacientes((state) => [response.data, ...state])
   },[])
+
   const updatePaciente = useCallback(async (data: CreatePacienteInput) => {
     const paciente = {
       nome: data.nome, 
@@ -133,10 +145,11 @@ export function PacienteProvider({children}: PacienteProviderProps) {
 
   useEffect(()=> {
     fetchPacientes()
+    setError(false)
   },[paciente])
 
   return (
-    <PacienteContext.Provider value={{pacientes,paciente, fetchPacientes, createPaciente,updatePaciente, isLoading, deletePaciente, fetchPaciente}}>
+    <PacienteContext.Provider value={{pacientes,paciente,error, fetchPacientes, createPaciente,updatePaciente, isLoading, deletePaciente, fetchPaciente}}>
       {children}
     </PacienteContext.Provider>
   )

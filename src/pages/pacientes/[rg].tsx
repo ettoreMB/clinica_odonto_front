@@ -41,32 +41,33 @@ export default function Paciente() {
     return <h1>Carregando</h1>
   }
   return (
-    <div>
+    <>
      <Box>
-        <Box>
-          <strong>Nome: <span>{paciente?.nome}</span></strong>
-          <strong>Sobrenome: <span>{paciente?.sobrenome}</span> </strong>
-          <strong>RG: <span>{paciente?.rg}</span> </strong>
-        </Box>
+          
+            <strong>Paciente: <span>{paciente?.nomeSobrenome}</span></strong>
+  
+            <strong>RG: <span>{paciente?.rg}</span> </strong>
+        
 
-        <h3>Endereço:</h3>
         {!paciente?.endereco ?
           "Endereco Não cadastrado" :
           (
             <>
               <Box>
                 <VStack>
-                  <strong>Rua: <span>{paciente?.endereco.logradouro}</span></strong>
-                  <strong>Numero: {paciente?.endereco.numero}</strong>
-                  <strong>Bairro: {paciente?.endereco.bairro}</strong>
-                  <strong>CEP: {paciente?.endereco.cep}</strong>
+                  <strong>Endereço: </strong>
+                  <span>{paciente?.endereco.logradouro}, </span>
+                  <span>{paciente?.endereco.numero}, </span>
+                  <span>{paciente?.endereco.bairro}, </span>
+                  <span>{paciente?.endereco.cep}, </span>
+                  <span>{paciente?.endereco.localidade}, </span>
+                  <span>{paciente?.endereco.uf}</span>
                 </VStack>
               </Box>
 
               <Box>
                 <VStack>
-                  <strong>Estado: <span>{paciente?.endereco.localidade}</span></strong>
-                  <strong>UF: {paciente?.endereco.uf}</strong>
+                   
                 </VStack>
               </Box>
             </>
@@ -81,6 +82,6 @@ export default function Paciente() {
           </Modal>
         </Dialog.Root>
         </Box>
-    </div>
+    </>
   )
 }

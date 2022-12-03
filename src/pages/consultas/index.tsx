@@ -1,27 +1,32 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { useRouter } from "next/router"
+import { isAxiosError } from 'axios'
 import {  useEffect } from "react"
+import { toast, ToastContainer } from 'react-toastify'
 import { useContextSelector } from 'use-context-selector'
-import PacienteForm from '../../components/Forms/pacienteForm'
+import ConsultaForm from '../../components/Forms/consultasForm'
 import Modal from '../../components/modal'
 import Table from "../../components/table"
 import { TableButton } from '../../components/table/styles'
-import { ConsultaContext } from '../../contexts/ConsultaContextx'
+import { ConsultaContext, CreateConsultaInput } from '../../contexts/ConsultaContextx'
 import { convertDate } from '../../utils/convertDate'
 
 
 export default function ListConsultas() {
 
-  const {consultas, isLoading, error, deleteConsulta} = useContextSelector(ConsultaContext, (context) => {
+  const {consultas, isLoading, error, createConsulta, deleteConsulta} = useContextSelector(ConsultaContext, (context) => {
     return context
   })
 
-  const router = useRouter()
-
-  function handlePacientes(rg: string) {
-    router.push(`/pacientes/${rg}`)
+  async function handleCreateConsulta(data: CreateConsultaInput) {
+    const {dhConsulta,matriculaDentista,rgPaciente} =  data
+    try {
+      await createConsulta({dhConsulta,matriculaDentista,rgPaciente})
+    } catch(err) {
+        isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao editar o dentista")
+      
+    }
   }
-  
+
   useEffect(() => {
     consultas
   }, [consultas])
@@ -30,9 +35,9 @@ export default function ListConsultas() {
     return (<h1>Carregando</h1>)
   }
 
-  if (error.isError) {
+  if (error) {
     return (
-      <h1>{error.message}</h1>
+      <h1>Erro ao carregar a pagina</h1>
     )
   }
 
@@ -40,10 +45,10 @@ export default function ListConsultas() {
     <>
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <button>+ Paciente</button>
+          <button>+ Consulta</button>
         </Dialog.Trigger>
         <Modal title='Cadastrar Novo Paciente'>
-          <PacienteForm />
+          <ConsultaForm />
         </Modal>
       </Dialog.Root>
 
@@ -61,23 +66,18 @@ export default function ListConsultas() {
           {consultas?.map(consulta => (
             <tr key={consulta.dhConsulta}>
               <td>{convertDate(consulta.dhConsulta)}</td>
-              <td>{consulta.paciente.nome}</td>
+              <td>{consulta.paciente.nome} {consulta.paciente.sobrenome}</td>
               <td>{consulta.dentista.nome}</td>
-              <td>
-                <TableButton
-                  color="view"
-                  onClick={() => handlePacientes(consulta.dhConsulta)}
-                >
-                  Ver
-                </TableButton>
+              <td>  
                 <TableButton color="delete" >
-                  Deletar
+                  Cancelar
                 </TableButton>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
+      <ToastContainer pauseOnHover={false} autoClose={800} position="bottom-right" />
     </>
   )
 }

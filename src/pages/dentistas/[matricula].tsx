@@ -12,55 +12,54 @@ import { Box, Container } from "./styles"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isAxiosError } from "axios"
+import { VStack } from "../../styles/globals"
 
 export default function Dentista() {
-  const router =  useRouter()
+  const router = useRouter()
   const { matricula } = router.query
 
-  const {dentista, fetchDentista}=useContextSelector(DentistaContext, (context)=> {
+  const { dentista, fetchDentista, isLoading } = useContextSelector(DentistaContext, (context) => {
     return context
   })
 
   useEffect(() => {
-    if(!router.isReady) return
-      fetchDentista(String(matricula))
-  },[router.isReady])
+    if (!router.isReady) return
+    fetchDentista(String(matricula))
+  }, [router.isReady])
 
+  if (isLoading) {
+    return (<h1>Loading</h1>)
+  }
 
   return (
-    <div>
-      {matricula == null  ? 
-      (<h1>Loading</h1>) : 
-      (
-        <Container>
-          <Box>
-            <strong>Nome :</strong>
-            <p>{dentista.nome}</p>
-          </Box>
-          
-          <Box>
-            <strong>Sobrenome :</strong>
-            <p>{dentista.sobrenome}</p>
-          </Box>
-          
-          <Box>
-            <strong>Matricula :</strong>
-            <p>{dentista.matricula}</p>
-          </Box>
 
-          <Dialog.Root>
+    <Container>
+      <VStack>
+        <Box>
+          <strong>Nome :</strong>
+          <p>{dentista.nome}</p>
+        </Box>
+
+        <Box>
+          <strong>Sobrenome :</strong>
+          <p>{dentista.sobrenome}</p>
+        </Box>
+
+        <Box>
+          <strong>Matricula :</strong>
+          <p>{dentista.matricula}</p>
+        </Box>
+
+        <Dialog.Root>
           <Dialog.Trigger asChild>
             <button>Editar Dentista</button>
           </Dialog.Trigger>
           <Modal title='Editar Dentista'>
-            <DentistaForm data={dentista}/>
+            <DentistaForm data={dentista} />
           </Modal>
         </Dialog.Root>
-          
-      </Container>
-      )
-      }
+      </VStack>
       <ToastContainer pauseOnHover={false} autoClose={800} position="bottom-right" />
-    </div>
+    </Container>
   )
 }
