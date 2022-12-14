@@ -12,7 +12,7 @@ export function setupApiClient(context = undefined) {
   let cookies = parseCookies(context);
   console.log(cookies['odonto.token'])
   const api = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://clinicaodonto.ettore.page:8080/',
   headers: {
     Authorization: `Bearer ${cookies['odonto.token']}`
   }
