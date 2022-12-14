@@ -21,7 +21,7 @@ export default function Dentista() {
   const { dentista, fetchDentista, isLoading } = useContextSelector(DentistaContext, (context) => {
     return context
   })
-
+  console.log(dentista)
   useEffect(() => {
     if (!router.isReady) return
     fetchDentista(String(matricula))

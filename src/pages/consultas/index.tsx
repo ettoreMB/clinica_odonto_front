@@ -9,6 +9,7 @@ import Table from "../../components/table"
 import { TableButton } from '../../components/table/styles'
 import { ConsultaContext, CreateConsultaInput } from '../../contexts/ConsultaContextx'
 import { convertDate } from '../../utils/convertDate'
+import { withSSRAuth } from '../../utils/withSSRAuth'
 
 
 export default function ListConsultas() {
@@ -17,13 +18,23 @@ export default function ListConsultas() {
     return context
   })
 
-  async function handleCreateConsulta(data: CreateConsultaInput) {
-    const {dhConsulta,matriculaDentista,rgPaciente} =  data
+  async function handleDeleteConsulta(consultaId: number,rgPaciente : string, matriculaDentista: string  | string[]  ,dhConsulta: string ) {
+    const splitDate = dhConsulta.split(" ")
+    const getDate = splitDate[0].split("/")
+    const newDate = `${getDate[2]}-${getDate[1]}-${getDate[0]}T${splitDate[1]}`
+    
+    // const newDhConsulta = `${}`
+    const data = {
+      consultaId: consultaId,
+      dhConsulta: newDate,
+      rgPaciente: rgPaciente,
+      matriculaDentista: matriculaDentista,
+    }
     try {
-      await createConsulta({dhConsulta,matriculaDentista,rgPaciente})
+      await deleteConsulta(data)
+      toast.success("Consulta excluida com sucesso")
     } catch(err) {
-        isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao editar o dentista")
-      
+      isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao deletar consulta")
     }
   }
 
@@ -65,11 +76,14 @@ export default function ListConsultas() {
 
           {consultas?.map(consulta => (
             <tr key={consulta.dhConsulta}>
-              <td>{convertDate(consulta.dhConsulta)}</td>
-              <td>{consulta.paciente.nome} {consulta.paciente.sobrenome}</td>
-              <td>{consulta.dentista.nome}</td>
+              <td>{consulta.dhConsulta}</td>
+              <td>{consulta.paciente?.nome} {consulta.paciente?.sobrenome}</td>
+              <td>{consulta.dentista?.nome}</td>
               <td>  
-                <TableButton color="delete" >
+                <TableButton 
+                  color="delete"
+                  onClick={async () => await handleDeleteConsulta(consulta.consultaId, consulta.paciente.rg, consulta.dentista.matricula, consulta.dhConsulta)}
+                 >
                   Cancelar
                 </TableButton>
               </td>
@@ -82,3 +96,6 @@ export default function ListConsultas() {
   )
 }
 
+export const getServerSideProps = withSSRAuth(async(context) => {
+  return {props: {}}
+})

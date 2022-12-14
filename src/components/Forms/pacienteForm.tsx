@@ -5,17 +5,20 @@ import { HStack, VStack } from '../../styles/globals'
 import { useRouter } from 'next/router'
 import { useContextSelector } from 'use-context-selector'
 import { Paciente, PacienteContext } from '../../contexts/PacientesContext'
+import { toast } from 'react-toastify'
+import { isAxiosError } from 'axios'
 
 const newPacienteFormSchema = zod.object({
-  nome: zod.string(),
+  nome: zod.string().min(2),
   sobrenome: zod.string(),
-  rg: zod.string() || zod.array(zod.string()) || zod.null(),
-  cep: zod.string(),
+  rg: zod.string().min(9).max(10) || zod.array(zod.string().min(9).max(10)) ,
+  password: zod.string(),
+  cep: zod.string().min(9).max(9),
   logradouro: zod.string(),
   numero: zod.string(),
   bairro: zod.string(),
   localidade: zod.string(),
-  uf: zod.string(),
+  uf: zod.string().min(2).max(2),
 })
 
 
@@ -40,30 +43,37 @@ export default function PacienteForm({ data }: PacienteFormProps) {
   const { createPaciente, updatePaciente } = useContextSelector(PacienteContext, (context) => {
     return context
   })
-  async function handleCreateNewDentista(data: NewPacienteFormInputs) {
+  async function handleCreateNewPaciente(data: NewPacienteFormInputs) {
     const paciente = {
       nome: data.nome,
       sobrenome: data.sobrenome,
       rg: data.rg,
       endereco: {
-        logradouro: data.logradouro,
         cep: data.cep,
+        logradouro: data.logradouro,
         numero: data.numero,
-        localidade: data.localidade,
         bairro: data.bairro,
-        uf: data.uf
+        localidade: data.localidade,
+        uf: data.uf,
+      },
+      usuario: {
+        password: data.password
       }
     }
-    if (router.query.rg === data.rg) {
-
-      updatePaciente(paciente)
+    try {
+      if (router.query.rg === data.rg) {
+        await updatePaciente(paciente)
+        toast.success("Paciente editado com sucesso")
+        reset()
+      }
+      await createPaciente(paciente)
+      toast.success("Paciente criado com sucesso")
+    } catch (err) {
+      isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao editar o dentista")
     }
-    createPaciente(paciente)
-
-    reset()
   }
   return (
-    <form onSubmit={handleSubmit(handleCreateNewDentista)}>
+    <form onSubmit={handleSubmit(handleCreateNewPaciente)}>
       <VStack>
         <HStack>
           <input
@@ -83,6 +93,13 @@ export default function PacienteForm({ data }: PacienteFormProps) {
           type="text"
           placeholder='rg'
           {...register('rg')}
+          readOnly={!!router.query.rg}
+          defaultValue={data?.rg}
+          required />
+        <input
+          type="password"
+          placeholder='senha'
+          {...register('password')}
           readOnly={!!router.query.rg}
           defaultValue={data?.rg}
           required />

@@ -19,7 +19,7 @@ export const globalStyles = globalCss({
     fontWeight: 400
   },
 
-  'input[type=text], input[type=datetime-local]' : {
+  'input[type=text], input[type=datetime-local],input[type=password]' : {
     border: 0,
     fontWeight: 'bold',
     borderRadius: '8px',
@@ -83,6 +83,7 @@ export const HStack = styled('div', {
   display: 'flex',
   flexDirection: 'row',
   gap: '1rem',
+  alignItems: 'center'
 })
 
 export const VStack = styled('div', {

@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isAxiosError } from 'axios'
 import { Half1Icon } from '@radix-ui/react-icons'
+import { withSSRAuth } from '../../utils/withSSRAuth'
 
 export default function ListPacientes() {
 
@@ -67,18 +68,18 @@ export default function ListPacientes() {
         </thead>
         <tbody>
 
-          {pacientes?.map(d => (
-            <tr key={d.rg}>
-              <td>{d.nome} {d.sobrenome}</td>
-              <td>{convertDate(d.dataCadastro)}</td>
+          {pacientes?.map(paciente => (
+            <tr key={paciente.rg}>
+              <td>{paciente.nome} {paciente.sobrenome}</td>
+              <td>{convertDate(paciente.dataCadastro)}</td>
               <td>
                 <TableButton
                   color="view"
-                  onClick={() => handlePacientes(d.rg)}
+                  onClick={() => handlePacientes(paciente.rg)}
                 >
                   Ver
                 </TableButton>
-                <TableButton color="delete" onClick={async() => handleDelete(d.rg)}>
+                <TableButton color="delete" onClick={async() => handleDelete(paciente.rg)}>
                   Deletar
                 </TableButton>
               </td>
@@ -91,3 +92,6 @@ export default function ListPacientes() {
   )
 }
 
+export const getServerSideProps = withSSRAuth(async(context) => {
+  return {props: {}}
+})

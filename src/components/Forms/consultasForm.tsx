@@ -47,14 +47,15 @@ export default function ConsultaForm({ data }: ConsultaFormProps) {
     return context
   })
 
-  async function handleCreateConsulta(data: NewConsultaFormInputs) {
-    const { dhConsulta,matriculaDentista,rgPaciente } = data
-    console.log(data)
-    // try {
-    // } catch (err) {
-    //   isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao editar o consulta")
-    // }
 
+  async function handleCreateConsulta(data: NewConsultaFormInputs) {
+    const {dhConsulta,matriculaDentista,rgPaciente} =  data
+    try {
+      await createConsulta({dhConsulta,matriculaDentista,rgPaciente})
+      toast.success("Consulta Criada com sucesso ")
+    } catch(err) {
+        isAxiosError(err) ? toast.error(err?.response?.data) : toast.error("Erro ao editar o dentista")
+    }
   }
 
   return (

@@ -1,13 +1,22 @@
 import Link from "next/link";
-import { useState } from "react";
+import {  useContext, useEffect, useState } from "react";
 import { Container,  LinkNav, LoginButton } from "./style";
-import UserInfo from "./usersInfo";
 import * as Dialog from '@radix-ui/react-dialog'
 import LoginForm from "../Forms/loginForm";
 import Modal from "../modal";
-export function Header() {
+import {  AuthContext, signOut } from "../../contexts/AuthContext";
+import { parseCookies } from "nookies";
+import { decode } from "jsonwebtoken";
+import { Router, useRouter } from "next/router";
+import { HStack, VStack } from "../../styles/globals";
 
-  const [isLogin, setIsLogin] = useState(false)
+export function Header() {
+  const router =  useRouter()
+  function handleSignout() {
+    signOut()
+    router.reload()
+  }
+  const {user} = useContext(AuthContext)
   return(
     <Container>
       <LinkNav>
@@ -22,13 +31,13 @@ export function Header() {
       </Link>
       </LinkNav>
       
-      { isLogin ? 
-        (<>
-            <UserInfo />
-            <LoginButton onClick={() => setIsLogin(false)}>
+      { user?.username ? 
+        (<HStack> 
+            <span>{user?.username}</span>
+            <LoginButton onClick={() => handleSignout()}>
               Logout
             </LoginButton>
-        </>)
+        </HStack>)
         : (<Login />) }
     </Container>
   )

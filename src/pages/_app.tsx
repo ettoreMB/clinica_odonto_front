@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app'
+import { AuthProvider } from '../contexts/AuthContext'
 import { ConsultaContext, ConsultaProvider } from '../contexts/ConsultaContextx'
 import { DentistaProvider } from '../contexts/DentistaContextx'
 import { PacienteProvider } from '../contexts/PacientesContext'
@@ -8,6 +9,7 @@ import RootLayout from './Layout'
 globalStyles()
 export default function App({ Component, pageProps }: AppProps) {
   return (
+    <AuthProvider>
     <RootLayout>
       <ToastContextProvider>
       <DentistaProvider>
@@ -20,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </DentistaProvider>
       </ToastContextProvider>
     </RootLayout>
+    </AuthProvider>
 
   )
 }

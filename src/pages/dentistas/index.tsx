@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import * as Dialog from '@radix-ui/react-dialog'
 import { isAxiosError } from "axios"
+import { withSSRAuth } from "../../utils/withSSRAuth"
 
 export default function ListDentista() {
 
@@ -68,7 +69,7 @@ export default function ListDentista() {
         <tbody>
           {dentistas?.map(dentista => (
             <tr key={String(dentista.matricula)}>
-              <td>{dentista.nomeSobrenome}</td>
+              <td>{dentista.nome} {dentista.sobrenome}</td>
               <td>{dentista.matricula}</td>
 
               <td>
@@ -96,3 +97,6 @@ export default function ListDentista() {
   )
 }
 
+export const getServerSideProps = withSSRAuth(async(context) => {
+  return {props: {}}
+})

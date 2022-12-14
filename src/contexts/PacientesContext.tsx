@@ -1,7 +1,7 @@
 import { AxiosError, isAxiosError } from "axios"
 import {  ReactNode, useCallback, useEffect, useState } from "react"
 import { createContext } from "use-context-selector"
-import { api } from "../lib/axios"
+import { api } from "../lib/apiClient"
 import Paciente from "../pages/pacientes/[rg]"
 
 
@@ -18,8 +18,11 @@ export interface Paciente {
   nome: string
   sobrenome: string
   rg: string
+  dataCadastro?: string
   endereco: Endereco
-  dataCadastro: string
+  usuario: {
+    password: string
+  }
 }
 
 interface PacienteProviderProps {
@@ -31,6 +34,9 @@ interface CreatePacienteInput {
   sobrenome: string
   rg: string
   endereco: Endereco
+  usuario: {
+    password: string 
+  }
 }
 
 interface PacienteContextType {
@@ -40,8 +46,8 @@ interface PacienteContextType {
   error: boolean
   fetchPacientes:() =>Promise<void>
   fetchPaciente:(rg: string | string []) =>Promise<void>
-  createPaciente:(data: Paciente) => Promise<void>
-  updatePaciente:(data: CreatePacienteInput) => Promise<void>
+  createPaciente:(data: CreatePacienteInput ) => Promise<void>
+  updatePaciente:(data: CreatePacienteInput ) => Promise<void>
   deletePaciente:(rg: string | string []) => Promise<void>
 }
 
@@ -62,6 +68,9 @@ export function PacienteProvider({children}: PacienteProviderProps) {
       logradouro: "",
       numero: "",
       uf: ""
+    },
+    usuario: {
+      password: ""
     }
   })
   
@@ -99,15 +108,19 @@ export function PacienteProvider({children}: PacienteProviderProps) {
       sobrenome: data.sobrenome, 
       rg: data.rg,
       endereco :{
-        bairro: data.endereco.bairro,
         cep: data.endereco.cep,
-        localidade: data.endereco.localidade,
         logradouro: data.endereco.logradouro,
         numero: data.endereco.numero,
+        bairro: data.endereco.bairro,
+        localidade: data.endereco.localidade,
         uf: data.endereco.uf
+      },
+      usuario :{
+        password: data.usuario.password
       }
-    } = data
+    }
     const response = await api.post('pacientes', paciente)
+    console.log(paciente)
     setPacientes((state) => [response.data, ...state])
   },[])
 
@@ -136,8 +149,8 @@ export function PacienteProvider({children}: PacienteProviderProps) {
 
   const deletePaciente =  useCallback(async(rg: string | string[]) => {
     try {
-      const response = await api.delete(`dentistas/${rg}`)
-      setPacientes((state) => [response.data, ...state])
+       await api.delete(`pacientes/${rg}`)
+      fetchPacientes()
     } finally {
       setIsLoanding(false)
     }

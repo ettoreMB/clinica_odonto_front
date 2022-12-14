@@ -14,6 +14,7 @@ const newDentistaFormSchema = zod.object({
   nome: zod.string(),
   sobrenome: zod.string(),
   matricula: zod.string() || zod.array(zod.string()) || zod.null(),
+  password: zod.string(),
 })
 
 type NewDentistaFormInputs = zod.infer<typeof newDentistaFormSchema>
@@ -39,15 +40,15 @@ export default function DentistaForm({ data }: DentistaFormProps) {
   })
 
   async function handleCreateDentista(data: NewDentistaFormInputs) {
-    const { nome, sobrenome, matricula } = data
+    const { nome, sobrenome, matricula, password } = data
     try {
       if (router.query.matricula === matricula) {
         const { matricula } = router.query
-        await updateDentista({ nome, sobrenome, matricula })
+        await updateDentista({ nome, sobrenome, matricula, password })
         toast.success("Dentista editado com sucesso")
         reset()
       } else {
-        await createDentista({ nome, sobrenome, matricula })
+        await createDentista({ nome, sobrenome, matricula, password })
         toast.success("Dentista criado com sucesso")
         reset()
       }
@@ -82,6 +83,13 @@ export default function DentistaForm({ data }: DentistaFormProps) {
             readOnly={!!router.query.matricula}
             required
             defaultValue={data?.matricula}
+          />
+          <input
+            type="password"
+            placeholder='Senha'
+            {...register('password')}
+            required
+            defaultValue={data?.password}
           />
 
           <button type='submit' >

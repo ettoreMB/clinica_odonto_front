@@ -6,10 +6,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CreateUserFormSchema = zod.object({
-  usuario: zod.string(  ),
-  senha: zod.string(),
-  repeatSenha: zod.string(),
-}).refine((data) => data.senha === data.repeatSenha ,{
+  username: zod.string(  ),
+  password: zod.string(),
+  repeatPassword: zod.string(),
+}).refine((data) => data.password === data.repeatPassword ,{
   message: "Senhas não sâo iguais",
   path:["repeatSenha"]
 })
@@ -40,18 +40,18 @@ export default function CreateUser() {
     <CreateUserContainer>
       <form onSubmit={handleSubmit(handleCreateUser)}>
         <label>Usuário</label>
-        <input type="text"  {...register('usuario')} required />
+        <input type="text"  {...register('username')} required />
 
         <label>Senha</label> 
-        <input type="password" {...register('senha')} required />
+        <input type="password" {...register('password')} required />
         <label>Repetir Senha</label>
-        <input type="password" {...register('repeatSenha')} required />
+        <input type="password" {...register('repeatPassword')} required />
         
         <button 
         type='submit' 
-        disabled={!!errors.repeatSenha}
+        disabled={!!errors.repeatPassword}
         >
-          {errors.repeatSenha ? errors.repeatSenha.message : "Criar"}
+          {errors.repeatPassword ? errors.repeatPassword?.message : "Criar"}
           
         </button>
       </form>

@@ -1,12 +1,12 @@
 import {  ReactNode, SetStateAction, useCallback, useEffect, useState } from "react"
 import { createContext } from "use-context-selector"
-import { api } from "../lib/axios"
+import {api } from "../lib/apiClient"
 
 export interface Dentista {
   nome: string
   sobrenome: string
-  matricula: string | string[] 
-  nomeSobrenome?: string
+  matricula: string  | string[] 
+  password: string
 }
 
 interface DentistaProviderProps {
@@ -17,6 +17,8 @@ interface CreateDentistaInput {
   nome: string
   sobrenome: string
   matricula: string
+  password: string
+  
 }
 
 interface DentistaContextType {
@@ -39,7 +41,7 @@ export function DentistaProvider({children}: DentistaProviderProps) {
     matricula: "",
     nome: "",
     sobrenome: "",
-    nomeSobrenome: ""
+    password: "",
   })
   const [isLoading, setIsLoanding] = useState(true)
 
@@ -70,11 +72,14 @@ export function DentistaProvider({children}: DentistaProviderProps) {
   },[])
 
   const createDentista = useCallback(async (data: CreateDentistaInput) => {
-    const {nome, sobrenome, matricula} = data
+    const {nome, sobrenome, matricula, password} = data
     const response = await api.post('dentistas', {
       nome,
       sobrenome,
       matricula,
+      usuario: {
+       password:password
+      }
 
     })
     setDentistas((state) => [response.data, ...state])
