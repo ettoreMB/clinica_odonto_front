@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { AxiosError, isAxiosError } from "axios"
 import {  ReactNode, useCallback, useEffect, useState } from "react"
 import { createContext } from "use-context-selector"
@@ -149,7 +150,7 @@ export function PacienteProvider({children}: PacienteProviderProps) {
 
   const deletePaciente =  useCallback(async(rg: string | string[]) => {
     try {
-       await api.delete(`pacientes/${rg}`)
+      const response = await api.delete(`pacientes/${rg}`)
       fetchPacientes()
     } finally {
       setIsLoanding(false)

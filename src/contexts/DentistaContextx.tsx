@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {  ReactNode, SetStateAction, useCallback, useEffect, useState } from "react"
 import { createContext } from "use-context-selector"
 import {api } from "../lib/apiClient"
@@ -41,7 +42,7 @@ export function DentistaProvider({children}: DentistaProviderProps) {
     matricula: "",
     nome: "",
     sobrenome: "",
-    password: "",
+    password: ""
   })
   const [isLoading, setIsLoanding] = useState(true)
 

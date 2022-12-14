@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useContextSelector } from "use-context-selector"
@@ -35,7 +36,7 @@ export default function Paciente() {
   useEffect(() => {
     if (!router.isReady) return
     fetchPaciente(String(rg))
-  }, [router.isReady])
+  }, [])
 
   if (isLoading) {
     return <h1>Carregando</h1>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {  ReactNode, use, useCallback, useEffect, useState } from "react"
 import { createContext } from "use-context-selector"
 import { api } from "../lib/apiClient"
@@ -80,11 +81,11 @@ export function ConsultaProvider({children}: ConsultaProviderProps) {
       )
       setConsultas((state) => [response.data, ...state])
       fetchConsultas()
-  },[fetchConsultas])
+  },[])
 
   useEffect(()=> {
     fetchConsultas()
-  },[fetchConsultas])
+  },[])
 
   return (
     <ConsultaContext.Provider value={{consultas, fetchConsultas, createConsulta, deleteConsulta, isLoading, error}}>
