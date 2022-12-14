@@ -1,4 +1,6 @@
-import { Container, LoginBox } from "./styles";
+import { Container } from "../../styles/globals";
+import { LoginBox } from "../../styles/pages/home";
+
 
 export default function LoginPage() {
   return(

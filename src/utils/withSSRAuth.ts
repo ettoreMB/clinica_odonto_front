@@ -3,7 +3,7 @@ import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult
 import { destroyCookie, parseCookies } from "nookies";
 import { signOut } from "../contexts/AuthContext";
 
-export function withSSRAuth<P = unknown>(fn: GetServerSideProps<P>) {
+export function withSSRAuth<P = unknown>(fn: GetServerSideProps<any>) {
   return async (context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
     let cookies = parseCookies(context);
     

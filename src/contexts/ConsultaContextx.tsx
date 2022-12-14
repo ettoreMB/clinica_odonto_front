@@ -49,7 +49,7 @@ export function ConsultaProvider({children}: ConsultaProviderProps) {
       const response =  await api.get("consultas")
       setConsultas(response.data)
     } catch(err) {
-      setError({isError: true, message:"Erro ao carregar Lista"})
+      setError(true)
      
     } finally {
       setIsLoanding(false)

@@ -44,7 +44,7 @@ export default function Paciente() {
     <>
      <Box>
           
-            <strong>Paciente: <span>{paciente?.nomeSobrenome}</span></strong>
+            <strong>Paciente: <span>{paciente?.nome} {paciente?.sobrenome}</span></strong>
   
             <strong>RG: <span>{paciente?.rg}</span> </strong>
         
