@@ -7,7 +7,7 @@ const nextConfig = {
     reactRemoveProperties: true,
   },
 
-  pageExtensions: ['ts']
+
 }
 
 module.exports = nextConfig

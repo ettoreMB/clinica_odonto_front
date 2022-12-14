@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { LoginBox } from "../styles/pages/home";
 
 export default function Home() {
 
