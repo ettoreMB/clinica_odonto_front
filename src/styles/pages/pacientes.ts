@@ -1,6 +1,6 @@
 import { styled } from "../../styles";
 
-export const Box = styled("div", {
+const Box = styled("div", {
   display: 'flex',
   alignItems: 'flex-start',
   flexDirection:'column',
@@ -11,3 +11,5 @@ export const Box = styled("div", {
     fontSize: '1.5rem'
   }
 })
+
+export {Box}

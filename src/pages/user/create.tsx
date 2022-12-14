@@ -1,7 +1,7 @@
 import * as zod from 'zod'
 import {  useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CreateUserContainer } from './styles'
+import { CreateUserContainer } from '../../styles/pages/user'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -23,7 +23,7 @@ export default function CreateUser() {
     reset,
     register,
     handleSubmit,
-    formState: {isSubmitting, errors}
+    formState: { errors}
   } = useForm<CreateUserFormInputs>({
     resolver: zodResolver(CreateUserFormSchema)
   })

@@ -8,7 +8,7 @@ import Modal from "../../components/modal"
 import { useContextSelector } from "use-context-selector"
 import DentistaForm from "../../components/Forms/dentistaForm"
 import { DentistaContext } from "../../contexts/DentistaContextx"
-import { Box, Container } from "./styles"
+import { Box, Container } from "../../styles/pages/dentistas"
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

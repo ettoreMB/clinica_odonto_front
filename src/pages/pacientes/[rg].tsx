@@ -6,28 +6,12 @@ import { PacienteContext } from "../../contexts/PacientesContext"
 import * as Dialog from '@radix-ui/react-dialog'
 import Modal from "../../components/modal"
 import PacienteForm from "../../components/Forms/pacienteForm"
-import { HStack, VStack } from "../../styles/globals"
-import { Box } from "./styles"
-
-type PacienteProps = {
-  nome: string,
-  sobrenome: string,
-  rg: string,
-  dataCadatro: string
-  endereco: {
-    cep: string
-    logradouro: string
-    numero: string
-    bairro: string
-    localidade: string
-    uf: string
-  }
-}
+import {  VStack } from "../../styles/globals"
+import {Box}  from "../../styles/pages/pacientes"
 
 export default function Paciente() {
   const router = useRouter()
   const { rg } = router.query
-
 
   const { fetchPaciente, paciente, isLoading } = useContextSelector(PacienteContext, (context) => {
     return context

@@ -1,6 +1,6 @@
 
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 import Table from "../../components/table"
 import Modal from "../../components/modal"
