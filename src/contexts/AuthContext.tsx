@@ -50,7 +50,7 @@ export function AuthProvider({children}:AuthProviderProps) {
         signOut()
       })
     } 
-  },[])
+  })
 
 
   const signIn = useCallback(async ({username, password}:SigInCredentials) => {

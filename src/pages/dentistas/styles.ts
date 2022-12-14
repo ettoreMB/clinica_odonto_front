@@ -1,7 +1,6 @@
 import { styled } from "../../styles";
-import { HStack } from "../../styles/globals";
 
-export const Container = styled('div', {
+export  const Container = styled('div', {
   width: 'fit-content',
   gap: '1rem'
 })

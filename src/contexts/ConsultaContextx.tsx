@@ -80,11 +80,11 @@ export function ConsultaProvider({children}: ConsultaProviderProps) {
       )
       setConsultas((state) => [response.data, ...state])
       fetchConsultas()
-  },[])
+  },[fetchConsultas])
 
   useEffect(()=> {
     fetchConsultas()
-  },[])
+  },[fetchConsultas])
 
   return (
     <ConsultaContext.Provider value={{consultas, fetchConsultas, createConsulta, deleteConsulta, isLoading, error}}>

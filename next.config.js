@@ -5,7 +5,9 @@ const nextConfig = {
 
   compiler: {
     reactRemoveProperties: true,
-  }
+  },
+
+  pageExtensions: ['ts']
 }
 
 module.exports = nextConfig
